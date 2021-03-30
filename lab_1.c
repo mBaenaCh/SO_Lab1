@@ -1,6 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <ctype.h>
+
+void remove_spaces(char* restrict str_trimmed, const char* restrict str_untrimmed){
+	while(*str_untrimmed!='\0'){
+		if(!isspace(*str_untrimmed)){
+			*str_trimmed = *str_untrimmed;
+			str_trimmed++;
+		}
+		str_untrimmed++;
+	}
+	*str_trimmed='\0';
+}
 
 int main(int argc, char*argv[]){
 	/*Validar que el archivo a leer fue ingresado como parametro*/
@@ -23,8 +36,8 @@ int main(int argc, char*argv[]){
 	int total_ingredients = 0;
 	int total_plates = 0;
 	int p2, p3, p4 = 0;
-	char *ingredients[10] = {};
-
+	char ingredients[20][10];
+	bool flag;
 	/*Comenzamos a leer el archivo*/
 	while(fgets(line, 1024, fp)){
 		char *word;
@@ -43,17 +56,37 @@ int main(int argc, char*argv[]){
 			}
 			/*Incrementamos variable de control para la entrada de este procedimiento*/
 			line_count++;
+
+		/*Lectura de platos y sus ingredientes*/
 		}else{
-			/*Lectura de platos y sus ingredientes*/
+			/*Lectura de numero de ingredientes por plato*/
 			word = strtok_r(rest, " ", &rest);
-			num_ingredients_per_plate = atoi(word); /*Ingredientes por plato*/
+			num_ingredients_per_plate = atoi(word);
 			total_plates++;
+
+			/*Lectura de cada ingrediente por plato*/
 			for(int i = 0; i<num_ingredients_per_plate; i++){
+
 				word  = strtok_r(rest, " ", &rest);
-/*				printf("Ingrediente %d : %s \n", i, word);*/
+				flag = false;
+				char *aux = (char*)malloc(sizeof(char*));
+				remove_spaces(aux,word);
+				for(int j = 0; j < total_ingredients; j++){
+					int cmp = strcmp(ingredients[j], aux);
+					if(cmp == 0){
+						flag = true;
+					}
+				}
+				if(flag == false){
+					strcpy(ingredients[total_ingredients], aux);
+					total_ingredients++;
+				}
 			}
 		}
 	}
+
+	printf("Cantidad total de platos: %d \n", total_plates);
+	printf("Cantidad total de ingredientes: %d \n", total_ingredients);
 	if(arguments[0] == total_plates){
 		printf("Puede continuar\n");
 	}else{
