@@ -17,47 +17,47 @@ int main(int argc, char*argv[]){
 	}
 
 	char line[1024];
-	int linecount = 0;
+	int line_count = 0;
 	int arguments[4];
-	int numingredients = 0;
-	int pp = 0;
-	int I = 0;
+	int num_ingredients_per_plate = 0;
+	int total_ingredients = 0;
+	int total_plates = 0;
 	int p2, p3, p4 = 0;
+	char *ingredients[10] = {};
 
 	/*Comenzamos a leer el archivo*/
 	while(fgets(line, 1024, fp)){
 		char *word;
 		char *rest =line;
 		/*Ingresamos a la primera linea del archivo y la leemos*/
-		if(linecount == 0){
+		if(line_count == 0){
 
-			int termscount = 0;
-			/*Llenamos los valores del vector arguments en las posiciones 
+			int terms_count = 0;
+			/*Llenamos los valores del vector arguments en las posiciones
 			correspondientes*/
 			while(word = strtok_r(rest, " ", &rest)){
 				/*En el vector en la posicion dada guardamos el valor leido
 				haciendo un casting a entero*/
-				arguments[termscount] = atoi(word);
-				termscount++;
+				arguments[terms_count] = atoi(word);
+				terms_count++;
 			}
 			/*Incrementamos variable de control para la entrada de este procedimiento*/
-			linecount++;
+			line_count++;
 		}else{
 			/*Lectura de platos y sus ingredientes*/
 			word = strtok_r(rest, " ", &rest);
-			numingredients = atoi(word); /*Ingredientes por plato*/
-
-			for(int i = 0; i<numingredients; i++){
+			num_ingredients_per_plate = atoi(word); /*Ingredientes por plato*/
+			total_plates++;
+			for(int i = 0; i<num_ingredients_per_plate; i++){
 				word  = strtok_r(rest, " ", &rest);
-				printf("Ingredient: %s\n", word);
-
+/*				printf("Ingrediente %d : %s \n", i, word);*/
 			}
 		}
 	}
-	printf("Cantidad pedidos:%d \n",arguments[0]);
- 	printf("Pedidos de 2 platos:%d \n", arguments[1]);
-	printf("Pedidos de 3 platos:%d \n", arguments[2]);
-	printf("Pedidos de 4 platos: %d \n",arguments[3]);
-
+	if(arguments[0] == total_plates){
+		printf("Puede continuar\n");
+	}else{
+		printf("La cantidad de platos ingresada no corresponde a la encontrada");
+	}
 	fclose(fp);
 }
