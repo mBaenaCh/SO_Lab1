@@ -54,6 +54,9 @@ int main(int argc, char*argv[]){
 				arguments[terms_count] = atoi(word);
 				terms_count++;
 			}
+			p2 = arguments[1];
+			p3 = arguments[2];
+			p4 = arguments[3];
 			/*Incrementamos variable de control para la entrada de este procedimiento*/
 			line_count++;
 
@@ -86,6 +89,9 @@ int main(int argc, char*argv[]){
 	}
 
 	printf("Cantidad total de platos: %d \n", total_plates);
+	printf("Cantidad de pedidos de 2 platos: %d \n", p2);
+	printf("Cantidad de pedidos de 3 platos: %d \n", p3);
+	printf("Cantidad de pedidos de 4 platos: %d \n", p4);
 	printf("Cantidad total de ingredientes: %d \n", total_ingredients);
 	if(arguments[0] == total_plates){
 		printf("Puede continuar\n");
