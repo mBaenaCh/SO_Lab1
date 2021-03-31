@@ -38,6 +38,8 @@ int main(int argc, char*argv[]){
 	int p2, p3, p4 = 0;
 	char ingredients[20][10];
 	bool flag;
+	int op3, op4 = 0;
+
 	/*Comenzamos a leer el archivo*/
 	while(fgets(line, 1024, fp)){
 		char *word;
@@ -96,8 +98,10 @@ int main(int argc, char*argv[]){
 	printf("Cantidad total de ingredientes: %d \n", total_ingredients);
 	if(arguments[0] == total_plates){
 		printf("Puede continuar\n");
+			/*Asignacion de valores offset*/
+			op3 = 2*p2;
+			op4 = 2*p2 + 3*p3;
 			/*Llenado de la matriz de P con valores 0*/
-
 			int p[total_plates][total_ingredients];
 			for(int i = 0; i < total_plates; i++){
 				for(int j=0; j < total_ingredients; j++){
@@ -106,14 +110,14 @@ int main(int argc, char*argv[]){
 
 			}
 			/*Debemos leer nuevamente el archivo*/
-			//char line2[1024];
-			//fp = fopen(argv[1], "r");
-			rewind(fp);
+			char line2[1024];
+			fp = fopen(argv[1], "r");
+			//rewind(fp);
 			line_count = 0;
 			num_ingredients_per_plate = 0;
-			while(fgets(line, 1024,fp)){
+			while(fgets(line2, 1024,fp)){
 				char *word;
-				char *rest=line;
+				char *rest=line2;
 				/*Omitir primera linea del archivo*/
 				if(line_count==0){
 					line_count++;
@@ -145,7 +149,13 @@ int main(int argc, char*argv[]){
 				}
 				printf("\n");
 			}
-
+			/*Inicialmente llenamos el vector AP*/
+			int ap[total_plates];
+			for(int i=0; i < total_plates; i++){
+				ap[i] = i;
+				printf(" %d ", ap[i]);
+			}
+			printf("\n");
 	}else{
 		printf("La cantidad de platos ingresada no corresponde a la encontrada");
 	}
