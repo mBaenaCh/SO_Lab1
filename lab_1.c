@@ -86,17 +86,67 @@ int main(int argc, char*argv[]){
 				}
 			}
 		}
-	}
 
-	printf("Cantidad total de platos: %d \n", total_plates);
+	}
+	fclose(fp);
 	printf("Cantidad de pedidos de 2 platos: %d \n", p2);
 	printf("Cantidad de pedidos de 3 platos: %d \n", p3);
 	printf("Cantidad de pedidos de 4 platos: %d \n", p4);
+	printf("Cantidad total de platos: %d \n", total_plates);
 	printf("Cantidad total de ingredientes: %d \n", total_ingredients);
 	if(arguments[0] == total_plates){
 		printf("Puede continuar\n");
+			/*Llenado de la matriz de P con valores 0*/
+
+			int p[total_plates][total_ingredients];
+			for(int i = 0; i < total_plates; i++){
+				for(int j=0; j < total_ingredients; j++){
+					p[i][j] = 0;
+				}
+
+			}
+			/*Debemos leer nuevamente el archivo*/
+			//char line2[1024];
+			//fp = fopen(argv[1], "r");
+			rewind(fp);
+			line_count = 0;
+			num_ingredients_per_plate = 0;
+			while(fgets(line, 1024,fp)){
+				char *word;
+				char *rest=line;
+				/*Omitir primera linea del archivo*/
+				if(line_count==0){
+					line_count++;
+				/*Lectura de los archivos*/
+				}else{
+					word = strtok_r(rest, " ", &rest);
+					num_ingredients_per_plate = atoi(word);
+					/*Recorrido de ingredientes*/
+					for(int i=0; i<num_ingredients_per_plate; i++){
+						word = strtok_r(rest, " ", &rest);
+						char *aux = (char*)malloc(sizeof(char*));
+						remove_spaces(aux, word);
+						for(int j=0;j<total_ingredients;j++){
+							int cmp = strcmp(ingredients[j],aux);
+							if(cmp == 0){
+								/*Platos van de la linea 1 a n*/
+								p[line_count-1][j] = 1;
+								j=total_ingredients;
+							}
+						}
+					}
+					line_count++;
+				}
+			}
+			/*Se imprime la matriz P*/
+			for(int i=0; i< total_plates; i++){
+				for(int j=0; j<total_ingredients; j++){
+					printf(" %d ", p[i][j]);
+				}
+				printf("\n");
+			}
+
 	}else{
 		printf("La cantidad de platos ingresada no corresponde a la encontrada");
 	}
-	fclose(fp);
 }
