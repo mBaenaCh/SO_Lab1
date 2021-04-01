@@ -15,6 +15,35 @@ void remove_spaces(char* restrict str_trimmed, const char* restrict str_untrimme
 	*str_trimmed='\0';
 }
 
+void print_array(int arr[], int size){
+	int i;
+	for(i=0; i<size; i++){
+		printf(" %d ", arr[i]);
+	}
+	printf("\n");
+
+}
+
+void swap(int *a, int *b){
+	int temp;
+	temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+void permutation(int *arr, int start, int end){
+	if(start == end){
+		print_array(arr, end+1);
+	}
+	int i;
+	for(i = start; i<= end;i++){
+		swap((arr+i), (arr+start));
+		permutation(arr, start+1, end);
+		swap((arr+i), (arr+start));
+	}
+}
+
+
 int main(int argc, char*argv[]){
 	/*Validar que el archivo a leer fue ingresado como parametro*/
 	if(argc < 2){
@@ -156,6 +185,8 @@ int main(int argc, char*argv[]){
 				printf(" %d ", ap[i]);
 			}
 			printf("\n");
+			permutation(ap, 0, total_plates-1);
+
 	}else{
 		printf("La cantidad de platos ingresada no corresponde a la encontrada");
 	}
