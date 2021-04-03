@@ -31,18 +31,75 @@ void swap(int *a, int *b){
 	*b = temp;
 }
 
-void permutation(int *arr, int start, int end){
+int sum_ingredients(int total_plates, int ap[total_plates], int total_ingredients, int p[total_plates][total_ingredients], int p2, int p3, int p4){
+	int sum = 0;
+	int op3, op4 = 0;
+	op3 = 2*p2;
+	op4 = 2*p2 + 3*p3;
+
+	/*Suma para las ordenes de 2 platos*/
+	for(int i=0; i < p2 ; i++){
+		for(int j=0; j < total_ingredients; j++){
+			if( p[ap[2*i]][j] || p[ap[(2*i)+1]][j] ){
+				sum++;
+			}
+		}
+	}
+
+	/*Suma para las ordenes de 3 platos*/
+	for(int i=0; i<p3; i++){
+		for(int j=0; j < total_ingredients; j++){
+			if( p[ap[(op3+(3*i))]][j] || p[ap[(op3+(3*i)+1)]][j] || p[ap[(op3+(3*i)+2)]][j]){
+				sum++;
+			}
+		}
+	}
+
+	/*Suma para las ordenes de 4 platos*/
+	for(int i=0; i < p4; i++){
+		for(int j = 0; j < total_ingredients; j++){
+			if(p[ap[(op4+(4*i))]][j] || p[ap[(op4+(4*i)+1)]][j] || p[ap[(op4+(4*i)+2)]][j] || p[ap[(op4+(4*i)+3)]][j]){
+				sum++;
+			}
+		}
+	}
+
+	return sum;
+}
+
+void permutation(int *arr, int start, int end, int total_plates, int total_ingredients, int p[total_plates][total_ingredients], int p2, int p3, int p4, int *sum_max, int *ap_max){
+	/*Indica el fin de una permutacion*/
 	if(start == end){
-		print_array(arr, end+1);
+		/*print_array(arr, end+1);*/
+		/*Aqui se tiene que llamar sum_ingredients*/
+		int suma = 0;
+		suma = sum_ingredients(total_plates, arr, total_ingredients, p, p2, p3, p4);
+		/*printf("realizo suma %d \n", suma);*/
+		if(suma > *sum_max){
+			for(int i = 0; i < total_plates; i++){
+				ap_max[i] = arr[i];
+			}
+			/*print_array(ap_max, end+1);
+			printf("ap_max %d \n", *ap_max);
+			printf("arr %d \n", *arr);
+			print_array(arr, end+1);*/
+			*sum_max = suma;
+			/**ap_max = *arr;*/
+/*			printf("nuevo ap_max %d \n", *ap_max);
+			print_array(ap_max, end+1);*/
+
+		}
+
+
+
 	}
 	int i;
 	for(i = start; i<= end;i++){
 		swap((arr+i), (arr+start));
-		permutation(arr, start+1, end);
+		permutation(arr, start+1, end, total_plates, total_ingredients, p, p2, p3, p4, sum_max, ap_max);
 		swap((arr+i), (arr+start));
 	}
 }
-
 
 int main(int argc, char*argv[]){
 	/*Validar que el archivo a leer fue ingresado como parametro*/
@@ -72,7 +129,7 @@ int main(int argc, char*argv[]){
 	/*Comenzamos a leer el archivo*/
 	while(fgets(line, 1024, fp)){
 		char *word;
-		char *rest =line;
+		char *rest = line;
 		/*Ingresamos a la primera linea del archivo y la leemos*/
 		if(line_count == 0){
 
@@ -130,13 +187,13 @@ int main(int argc, char*argv[]){
 			/*Asignacion de valores offset*/
 			op3 = 2*p2;
 			op4 = 2*p2 + 3*p3;
+
 			/*Llenado de la matriz de P con valores 0*/
 			int p[total_plates][total_ingredients];
 			for(int i = 0; i < total_plates; i++){
 				for(int j=0; j < total_ingredients; j++){
 					p[i][j] = 0;
 				}
-
 			}
 			/*Debemos leer nuevamente el archivo*/
 			char line2[1024];
@@ -182,12 +239,26 @@ int main(int argc, char*argv[]){
 			int ap[total_plates];
 			for(int i=0; i < total_plates; i++){
 				ap[i] = i;
-				printf(" %d ", ap[i]);
+/*				printf(" %d ", ap[i]);*/
 			}
 			printf("\n");
-			permutation(ap, 0, total_plates-1);
+
+			int *sum_max = (int*)malloc(sizeof(int));
+			*sum_max = 0;
+			int *ap_max = (int*)malloc(sizeof(int)*total_plates);
+
+			permutation(ap, 0, total_plates-1, total_plates, total_ingredients, p, p2, p3, p4, sum_max, ap_max);
+
+			printf("Sum_max: %d \n", *sum_max);
+
+			for(int i = 0; i < total_plates; i++){
+				printf(" %d ", ap_max[i]);
+			}
+
+			printf("\n");
 
 	}else{
 		printf("La cantidad de platos ingresada no corresponde a la encontrada");
 	}
 }
+
